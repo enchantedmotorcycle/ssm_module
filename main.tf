@@ -1,5 +1,5 @@
 locals {
-  local_data = jsondecode(file("${path.module}/ssm_input.json"))
+  local_data = jsondecode(file(var.input_file))
 }
 
 output "show_locals" {
