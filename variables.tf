@@ -21,8 +21,8 @@ variable "input_file" {
     condition     = length(var.input_file) > 1
     error_message = "Input file path cannot be blank"
   }
-  validation {
-    condition     = length(var.ssm_parameter) < 1
-    error_message = "Cannot specify both an input file and a parameter"
-  }
+  #validation {
+  #  condition     = length(var.ssm_parameter) < 1
+  #  error_message = "Cannot specify both an input file and a parameter"
+  #}
 }
