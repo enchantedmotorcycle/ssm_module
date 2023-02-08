@@ -7,6 +7,7 @@ variable "data_type" {
 }
 
 variable "key_id" {
+  type        = string
 }
 
 variable "ssm_parameter" {
@@ -37,4 +38,10 @@ variable "input_file" {
   #  condition     = length(var.ssm_parameter) < 1
   #  error_message = "Cannot specify both an input file and a parameter"
   #}
+}
+
+variable "encryption_algorithm" {
+  default = null
+  description = "Encryption algorithm if a secure SSM Param is not built with a KMS cipherblob"
+  type    = string
 }
