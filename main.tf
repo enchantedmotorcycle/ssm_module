@@ -21,6 +21,9 @@ resource "aws_ssm_parameter" "secure_ssm_params" {
   value       = data.aws_kms_secrets.secure_ssm_secrets[each.key].plaintext[each.key]
   tier        = each.value.ssm_param_tier
   key_id      = var.key_id
+  data_type   = var.data_type
+  allowed_pattern = var.allowed_pattern
+  overwrite = var.overwrite
 
   tags = {
     environment = "production"
@@ -37,6 +40,9 @@ resource "aws_ssm_parameter" "ssm_params" {
   value       = each.value.ssm_param_value
   tier        = each.value.ssm_param_tier
   key_id      = var.key_id
+  data_type   = var.data_type
+  allowed_pattern = var.allowed_pattern
+  overwrite = var.overwrite
 
   tags = {
     environment = "production"

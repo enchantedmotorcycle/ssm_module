@@ -1,13 +1,16 @@
 variable "region" {
   default     = "us-west-2"
+  description = "AWS region"
 }
 
 variable "data_type" {
   default     = "text"
+  description = "Parameter data type."
 }
 
 variable "key_id" {
   type        = string
+  description = "KMS key ARN."
 }
 
 variable "ssm_parameter" {
@@ -24,6 +27,7 @@ variable "ssm_parameter" {
     }
   )
   default = null
+  description = "SSM parameter created outside of a file."
 }
 
 variable "input_file" {
@@ -44,4 +48,16 @@ variable "encryption_algorithm" {
   default = null
   description = "Encryption algorithm if a secure SSM Param is not built with a KMS cipherblob"
   type    = string
+}
+
+variable "overwrite" {
+  default = false
+  type = boolean
+  description = "Overwrite an existing parameter."
+}
+
+variable "allowed_pattern" {
+  default = false
+  type = string
+  description = "Regular expression used to validate parameter values."
 }
