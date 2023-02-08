@@ -1,13 +1,14 @@
 locals {
   #local_data = jsondecode(file(var.input_file))
   local_data = var.input_file != "" ? jsondecode(file(var.input_file)) : var.ssm_parameter
+  
+  #raw_value = yamldecode(file("${path.module}/example.yaml"))
+  #normalized_value = {
+  #  name   = tostring(try(local.raw_value.name, null))
+  #  groups = try(local.raw_value.groups, [])
+  #}
 
-    # lifecycle {
-    #     precondition {
-    #     condition     = var.input_file && var.ssm_parameter
-    #     error_message = "Cannot specify both an input file and individual SSM Parameters."
-    #     }
-    # }
+   
 }
 
 output "show_locals" {
@@ -20,9 +21,10 @@ resource "aws_ssm_parameter" "secure_ssm_params" {
     for param in local.local_data.aws_ssm_parameter : param.ssm_param_name => param if param.ssm_param_type == "SecureString"
   }
   name        = each.key
-  description = "The parameter description"
+  description = each.value.ssm_param_description
   type        = "SecureString"
   value       = data.aws_kms_secrets.secure_ssm_secrets[each.key].plaintext[each.key]
+  tier        = each.value.ssm_param_tier
   #value       = "temp"
   #key_id      = "key_id"
 
@@ -51,9 +53,10 @@ resource "aws_ssm_parameter" "ssm_params" {
     for param in local.local_data.aws_ssm_parameter : param.ssm_param_name => param if param.ssm_param_type == "String"
   }
   name        = each.key
-  description = "The parameter description"
+  description = each.value.ssm_param_description
   type        = "String"
   value       = each.value.ssm_param_value
+  tier        = each.value.ssm_param_tier
   #value       = "temp"
   #key_id      = "key_id"
 

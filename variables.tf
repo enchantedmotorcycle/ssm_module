@@ -25,13 +25,13 @@ variable "ssm_parameter" {
 }
 
 variable "input_file" {
-  default     = "ssm_input.json"
+  default     = null
   description = "Input file with AWS SSM Parameters."
-  #type        = list(string)
-  validation {
-    condition     = length(var.input_file) > 1
-    error_message = "Input file path cannot be blank"
-  }
+  type        = string
+  #validation {
+  #  condition     = length(var.input_file) > 1
+  #  error_message = "Input file path cannot be blank"
+  #}
   #validation {
   #  condition     = length(var.ssm_parameter) < 1
   #  error_message = "Cannot specify both an input file and a parameter"
