@@ -60,3 +60,4 @@ lifecycle {
       condition     = var.input_file && var.ssm_parameter
       error_message = "Cannot specify both an input file and individual SSM Parameters."
     }
+}
