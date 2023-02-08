@@ -12,7 +12,7 @@ variable "key_id" {
 variable "ssm_parameter" {
   type = object(
     {
-    top = list(object({
+    aws_ssm_parameter = list(object({
     ssm_param_name    = string
     ssm_param_tier    = string
     ssm_param_type    = string
