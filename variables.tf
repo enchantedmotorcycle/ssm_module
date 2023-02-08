@@ -10,12 +10,15 @@ variable "key_id" {
 }
 
 variable "ssm_parameter" {
-  type = list(object({
+  type = object(list(object(
+    {
     ssm_param_name    = string
     ssm_param_tier    = string
     ssm_param_type    = string
     ssm_param_value   = string
-  }))
+  }
+  )
+  ))
   default = null
 }
 
