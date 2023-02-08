@@ -1,6 +1,6 @@
 locals {
   #local_data = jsondecode(file(var.input_file))
-  local_data = var.input_file != "" ? jsondecode(file(var.input_file)) : var.ssm_parameter
+  local_data = var.input_file != null ? jsondecode(file(var.input_file)) : var.ssm_parameter
   
   #raw_value = yamldecode(file("${path.module}/example.yaml"))
   #normalized_value = {
