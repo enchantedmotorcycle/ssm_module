@@ -16,6 +16,7 @@ variable "ssm_parameter" {
     ssm_param_type    = string
     ssm_param_value   = string
   }))
+  default = null
 }
 
 variable "input_file" {
