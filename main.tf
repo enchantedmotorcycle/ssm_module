@@ -1,5 +1,6 @@
 locals {
-  local_data = jsondecode(file(var.input_file))
+  #local_data = jsondecode(file(var.input_file))
+  local_data = var.input_file != "" ? jsondecode(file(var.input_file)) : var.ssm_parameter
 }
 
 output "show_locals" {
@@ -53,3 +54,9 @@ resource "aws_ssm_parameter" "ssm_params" {
     environment = "production"
   }
 }
+
+lifecycle {
+    precondition {
+      condition     = var.input_file && var.ssm_parameter
+      error_message = "Cannot specify both an input file and individual SSM Parameters."
+    }
