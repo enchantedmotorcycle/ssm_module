@@ -57,7 +57,7 @@ variable "overwrite" {
 }
 
 variable "allowed_pattern" {
-  default = false
+  default = null
   type = string
   description = "Regular expression used to validate parameter values."
 }
