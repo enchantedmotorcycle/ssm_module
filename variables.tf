@@ -51,7 +51,7 @@ variable "encryption_algorithm" {
 }
 
 variable "overwrite" {
-  default = false
+  default = null
   type = bool
   description = "Overwrite an existing parameter."
 }
