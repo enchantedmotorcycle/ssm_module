@@ -26,7 +26,7 @@ resource "aws_ssm_parameter" "secure_ssm_params" {
   value       = data.aws_kms_secrets.secure_ssm_secrets[each.key].plaintext[each.key]
   tier        = each.value.ssm_param_tier
   #value       = "temp"
-  #key_id      = "key_id"
+  key_id      = var.key_id
 
   tags = {
     environment = "production"
@@ -58,7 +58,7 @@ resource "aws_ssm_parameter" "ssm_params" {
   value       = each.value.ssm_param_value
   tier        = each.value.ssm_param_tier
   #value       = "temp"
-  #key_id      = "key_id"
+  key_id      = var.key_id
 
   tags = {
     environment = "production"
