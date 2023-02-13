@@ -11,6 +11,12 @@ locals {
    
 }
 
+locals {
+  # Ids for multiple sets of EC2 instances, merged together
+  #instance_ids = merge(aws_ssm_parameter.secure_ssm_params.*, aws_ssm_parameter.ssm_params.*)
+  #instance_ids = concat(aws_ssm_parameter.secure_ssm_params.*, aws_ssm_parameter.ssm_params.*) 
+  all_names = merge(aws_ssm_parameter.secure_ssm_params, aws_ssm_parameter.ssm_params) 
+}
 resource "aws_ssm_parameter" "secure_ssm_params" {
   for_each = {
     for param in local.local_data.aws_ssm_parameter : param.ssm_param_name => param if param.ssm_param_type == "SecureString"
