@@ -1,6 +1,7 @@
 locals {
   #local_data = jsondecode(file(var.input_file))
   local_data = var.input_file != null ? jsondecode(file(var.input_file)) : var.ssm_parameter
+  all_params = merge(aws_ssm_parameter.secure_ssm_params, aws_ssm_parameter.ssm_params) 
   
   #raw_value = yamldecode(file("${path.module}/example.yaml"))
   #normalized_value = {
@@ -11,12 +12,6 @@ locals {
    
 }
 
-locals {
-  # Ids for multiple sets of EC2 instances, merged together
-  #instance_ids = merge(aws_ssm_parameter.secure_ssm_params.*, aws_ssm_parameter.ssm_params.*)
-  #instance_ids = concat(aws_ssm_parameter.secure_ssm_params.*, aws_ssm_parameter.ssm_params.*) 
-  all_names = merge(aws_ssm_parameter.secure_ssm_params, aws_ssm_parameter.ssm_params) 
-}
 resource "aws_ssm_parameter" "secure_ssm_params" {
   for_each = {
     for param in local.local_data.aws_ssm_parameter : param.ssm_param_name => param if param.ssm_param_type == "SecureString"
@@ -31,9 +26,7 @@ resource "aws_ssm_parameter" "secure_ssm_params" {
   allowed_pattern = var.allowed_pattern
   overwrite = var.overwrite
 
-  tags = {
-    environment = "production"
-  }
+  tags = var.tags
 }
 
 resource "aws_ssm_parameter" "ssm_params" {
@@ -50,8 +43,6 @@ resource "aws_ssm_parameter" "ssm_params" {
   allowed_pattern = var.allowed_pattern
   overwrite = var.overwrite
 
-  tags = {
-    environment = "production"
-  }
+  tags = var.tags
 }
 

@@ -43,7 +43,7 @@ output "all_parameters" {
   #   for param in aws_ssm_parameter.ssm_params.name : param.name
   # ]
   #value = values(local.all_names)[*]
-  value = local.all_names
+  value = local.all_params
   sensitive = true
 }
 
@@ -52,7 +52,7 @@ output "all_parameters_name" {
   # value = [
   #   for param in aws_ssm_parameter.ssm_params.name : param.name
   # ]
-  value = values(local.all_names)[*].name
+  value = values(local.all_params)[*].name
 }
 
 output "all_parameters_value" {
@@ -60,6 +60,6 @@ output "all_parameters_value" {
   # value = [
   #   for param in aws_ssm_parameter.ssm_params.name : param.name
   # ]
-  value = values(local.all_names)[*].value
+  value = values(local.all_params)[*].value
   sensitive = true
 }

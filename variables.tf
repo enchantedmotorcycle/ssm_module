@@ -61,3 +61,9 @@ variable "allowed_pattern" {
   type = string
   description = "Regular expression used to validate parameter values."
 }
+
+variable "tags" {
+	type = map(string)
+	default = null
+	description = "Tags to apply to your SSM Parameters.  May not be necessary if your account has auto-tagging enabled."
+}
