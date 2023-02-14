@@ -1,11 +1,26 @@
 # .terraform-docs.yml
 content: |-
   {{ .Header }}
-
-  ## Example
+  
+  ## Example 1 - SSM Parameters from an input file
 
   ```hcl
   {{ include "examples/example-1/main.tf" }}
+  ```
+  ```json
+  {{ include "examples/example-1/ssm_input.json" }}
+  ```
+  
+  ## Example 2 - SSM Parameters from Terraform variables file
+
+  ```hcl
+  {{ include "examples/example-2/main.tf" }}
+  ```
+
+  ## Example 3 - Pass module outputs to other AWS services
+
+  ```hcl
+  {{ include "examples/example-3/main.tf" }}
   ```
 
   {{ .Inputs }}

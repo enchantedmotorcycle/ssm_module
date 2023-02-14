@@ -1,9 +1,50 @@
 <!-- BEGIN_TF_DOCS -->
 # Terraform SSM Parameter Module
 
-This module can be used to create AWS SSM Parameters accepting input from a structured JSON file or from Terraform variables/direct input text.  See below for examples on usage and required module inputs.
+This module can be used to create AWS SSM Parameters accepting input from a structured JSON file or from Terraform variables/direct input text.  The module output can be used in other AWS resources and pass either secure or ine  See below for examples on usage and required module inputs.
 
-## Example
+## Example 1 - SSM Parameters from an input file
+
+```hcl
+# Create SSM parameters using a JSON input file
+module my_parameters_from_file {
+    source = "git::https://github.com/path_to_module/ssm_module.git"
+    input_file = "ssm_input_json"
+    key_id = "arn:aws:kms:us-west-2:2309209292:key/21ba1676-db71-4c0e-b8be-xxxxxxxx"
+    tags = {env = "non-prod", paramset = "my tag value"}
+}
+```
+```json
+{
+    "aws_ssm_parameter": [
+        {
+            "ssm_param_name": "/stg/app-name/my-param-1",
+            "ssm_param_tier": "Standard",
+            "ssm_param_type": "String",
+            "ssm_param_value": "my-insecure-string-value-1"
+        },
+        {
+            "ssm_param_name": "/stg/app-name/my-secure-param-1",
+            "ssm_param_tier": "Standard",
+            "ssm_param_type": "SecureString",
+            "ssm_param_value": "AQICAHjT9xes01gdm2hqKR6JVG0KQcw1bZquiHq1xvG7mLN/yQFd0P4AlF533xSiXrccDAjaAAAAcDBuBgkqhkiG9w0BBwagYTBfAgEAMFoGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMa9/87wed3EvR8NaiAgEQgC1CALoaU0besNWGLH+3wHuaPwacgrRdz3jzilBzU9NNTGIjTSsD3f0R2xOhCYw="
+        }
+    ]
+}
+```
+
+## Example 2 - SSM Parameters from Terraform variables file
+
+```hcl
+# Create SSM parameters from a variable or directly as an input
+module my_parameters_from_variables {
+    source = "git::https://github.com/path_to_module/ssm_module.git"
+    key_id = var.key_arn
+    ssm_parameter = var.ssm_params
+}
+```
+
+## Example 3 - Pass module outputs to other AWS services
 
 ```hcl
 # Create SSM parameters using a JSON input file
@@ -14,13 +55,6 @@ module my_parameters_from_file {
     tags = var.tags
 }
 
-# Create SSM parameters from a variable or directly as an input
-module my_parameters_from_variables {
-    source = "git::https://github.com/path_to_module/ssm_module.git"
-    key_id = var.key_arn
-    ssm_parameter = var.ssm_params
-}
-
 # Example using the created SSM parameter in a secret
 resource "aws_secretsmanager_secret" "ssm_param_secret" {
   name = "${module.my_parameters_from_file.all_parameters["/prd/my-parameter"].name}"
@@ -28,7 +62,7 @@ resource "aws_secretsmanager_secret" "ssm_param_secret" {
 
 # Example using the created SSM parameter as a secret value
 resource "aws_secretsmanager_secret_version" "ssm_param_secret_version" {
-  secret_id     = aws_secretsmanager_secret.chicken_dinner_secret.id
+  secret_id     = aws_secretsmanager_secret.ssm_param_secret.id
   secret_string = "${module.my_parameters_from_file.all_parameters["/prd/my-parameter"].value}"
 }
 ```
