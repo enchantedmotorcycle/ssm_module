@@ -1,25 +1,37 @@
 <!-- BEGIN_TF_DOCS -->
-## Requirements
+# Terraform SSM Parameter Module
 
-No requirements.
+This module can be used to create AWS SSM Parameters accepting input from a structured JSON file or from Terraform variables/direct input text.  See below for examples on usage and required module inputs.
 
-## Providers
+## Example
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+```hcl
+# Create SSM parameters using a JSON input file
+module my_parameters_from_file {
+    source = "git::https://github.com/path_to_module/ssm_module.git"
+    input_file = var.input_file
+    key_id = var.key_arn
+    tags = var.tags
+}
 
-## Modules
+# Create SSM parameters from a variable or directly as an input
+module my_parameters_from_variables {
+    source = "git::https://github.com/path_to_module/ssm_module.git"
+    key_id = var.key_arn
+    ssm_parameter = var.ssm_params
+}
 
-No modules.
+# Example using the created SSM parameter in a secret
+resource "aws_secretsmanager_secret" "ssm_param_secret" {
+  name = "${module.my_parameters_from_file.all_parameters["/prd/my-parameter"].name}"
+}
 
-## Resources
-
-| Name | Type |
-|------|------|
-| [aws_ssm_parameter.secure_ssm_params](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.ssm_params](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [aws_kms_secrets.secure_ssm_secrets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/kms_secrets) | data source |
+# Example using the created SSM parameter as a secret value
+resource "aws_secretsmanager_secret_version" "ssm_param_secret_version" {
+  secret_id     = aws_secretsmanager_secret.chicken_dinner_secret.id
+  secret_string = "${module.my_parameters_from_file.all_parameters["/prd/my-parameter"].value}"
+}
+```
 
 ## Inputs
 
