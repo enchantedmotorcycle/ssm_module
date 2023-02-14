@@ -7,6 +7,8 @@ content: |-
   ```hcl
   {{ include "examples/example-1/main.tf" }}
   ```
+  
+  ssm_input.json:
   ```json
   {{ include "examples/example-1/ssm_input.json" }}
   ```
